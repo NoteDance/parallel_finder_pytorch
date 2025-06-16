@@ -3,9 +3,10 @@ import time
 import torch
 from torch.utils.data import TensorDataset, DataLoader
 
+
 class ParallelFinder:
-    def __init__(self, model_fn_list):
-        self.model_fn_list = model_fn_list
+    def __init__(self, model_list):
+        self.model_list = model_list
         manager = multiprocessing.Manager()
         self.logs = manager.dict()
         self.logs['best_loss'] = float('inf')
@@ -17,7 +18,7 @@ class ParallelFinder:
     def _train_single(self, idx, train_data, train_labels, epochs, batch_size,
                       criterion, optimizer, optimizer_params, device_str):
         device = torch.device(device_str[idx])
-        model = self.model_fn_list[idx]()
+        model = self.model_list[idx]()
         model.to(device)
 
         if isinstance(train_data, torch.Tensor):
@@ -73,7 +74,7 @@ class ParallelFinder:
              criterion=None, optimizer=None, optimizer_params=None,
              device_str=None):
         processes = []
-        for idx in range(len(self.model_fn_list)):
+        for idx in range(len(self.model_list)):
             p = multiprocessing.Process(
                 target=self._train_single,
                 args=(idx, train_data, train_labels, epochs, batch_size,
