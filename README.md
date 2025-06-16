@@ -17,10 +17,10 @@
 ### Class: `ParallelFinder`
 
 ```python
-ParallelFinder(model_fn_list)
+ParallelFinder(model_list)
 ```
 
-* **model\_fn\_list**: List of callables with no arguments. Each callable returns a fresh `torch.nn.Module` instance (e.g. `[lambda: MyModelA(), lambda: MyModelB()]`).
+* **model_list**: A list of zero-argument callables that return a new `torch.nn.Module` when called—this can be the model class itself if its `__init__` has no required arguments (e.g., `[MyModelA, MyModelB]`) or a top-level factory function/`functools.partial` for models needing parameters.
 
 #### Attributes
 
